@@ -1,0 +1,32 @@
+﻿@model IEnumerable<stateMonitor.lampotilaTaulu>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                Aikaleima :D
+            </th>
+            <th>
+                Lämpötila C
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.aika)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.lampotila1)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+

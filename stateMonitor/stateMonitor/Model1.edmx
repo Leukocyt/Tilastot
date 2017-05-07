@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="internetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="irkki">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="viesti" Type="nvarchar(max)" />
+          <Property Name="nick" Type="nvarchar" MaxLength="200" />
+          <Property Name="maara" Type="bigint" />
+          <Property Name="kanava" Type="nvarchar" MaxLength="1000" />
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="aika" Type="datetime" />
+          <Property Name="old" Type="int" />
+        </EntityType>
+        <EntityType Name="irkki_old">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="viesti" Type="nvarchar(max)" />
+          <Property Name="nick" Type="nvarchar" MaxLength="200" />
+          <Property Name="maara" Type="bigint" />
+          <Property Name="kanava" Type="nvarchar" MaxLength="1000" />
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="aika" Type="datetime" />
+        </EntityType>
+        <EntityType Name="lampotilaTaulu">
+          <Key>
+            <PropertyRef Name="rowId" />
+          </Key>
+          <Property Name="lampotila1" Type="float" />
+          <Property Name="lampotila2" Type="float" />
+          <Property Name="valoisuus" Type="float" />
+          <Property Name="humidity" Type="float" />
+          <Property Name="tempC" Type="float" />
+          <Property Name="aika" Type="datetime" />
+          <Property Name="id" Type="bigint" />
+          <Property Name="rowId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="memos">
+          <Key>
+            <PropertyRef Name="rowid" />
+          </Key>
+          <Property Name="rowid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ts" Type="datetime" />
+          <Property Name="url" Type="nvarchar(max)" />
+        </EntityType>
+        <Function Name="F_ROWS" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="start" Type="datetime" Mode="In" />
+          <Parameter Name="end" Type="datetime" Mode="In" />
+          <Parameter Name="channel" Type="nvarchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="nick" Type="nvarchar" MaxLength="200" />
+                <Property Name="Count" Type="int" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <EntityContainer Name="internetModelStoreContainer">
+          <EntitySet Name="irkki" EntityType="Self.irkki" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="irkki_old" EntityType="Self.irkki_old" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lampotilaTaulu" EntityType="Self.lampotilaTaulu" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="memos" EntityType="Self.memos" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="internetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <ComplexType Name="F_ROWS_Result">
+          <Property Name="nick" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Count" Type="Int32" />
+        </ComplexType>
+        <EntityContainer Name="internetEntities1" annotation:LazyLoadingEnabled="true">
+          <FunctionImport Name="F_ROWS" IsComposable="true" ReturnType="Collection(internetModel.F_ROWS_Result)">
+            <Parameter Name="start" Mode="In" Type="DateTime" />
+            <Parameter Name="end" Mode="In" Type="DateTime" />
+            <Parameter Name="channel" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="irkki" EntityType="internetModel.irkki" />
+          <EntitySet Name="lampotilaTaulu" EntityType="internetModel.lampotilaTaulu" />
+          <EntitySet Name="irkki_old" EntityType="internetModel.irkki_old" />
+          <EntitySet Name="memos" EntityType="internetModel.memos" />
+        </EntityContainer>
+        <EntityType Name="irkki">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="viesti" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="nick" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="maara" Type="Int64" />
+          <Property Name="kanava" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="id" Type="Int64" Nullable="false" />
+          <Property Name="aika" Type="DateTime" Precision="3" />
+          <Property Name="old" Type="Int32" />
+        </EntityType>
+        <EntityType Name="lampotilaTaulu">
+          <Key>
+            <PropertyRef Name="rowId" />
+          </Key>
+          <Property Name="lampotila1" Type="Double" />
+          <Property Name="lampotila2" Type="Double" />
+          <Property Name="valoisuus" Type="Double" />
+          <Property Name="humidity" Type="Double" />
+          <Property Name="tempC" Type="Double" />
+          <Property Name="aika" Type="DateTime" Precision="3" />
+          <Property Name="id" Type="Int64" />
+          <Property Name="rowId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="irkki_old">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="viesti" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="nick" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="maara" Type="Int64" />
+          <Property Name="kanava" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="aika" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="memos">
+          <Key>
+            <PropertyRef Name="rowid" />
+          </Key>
+          <Property Name="rowid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ts" Type="DateTime" Precision="3" />
+          <Property Name="url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="internetModelStoreContainer" CdmEntityContainer="internetEntities1">
+          <FunctionImportMapping FunctionName="internetModel.Store.F_ROWS" FunctionImportName="F_ROWS">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="internetModel.F_ROWS_Result">
+                <ScalarProperty Name="nick" ColumnName="nick" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="irkki">
+            <EntityTypeMapping TypeName="internetModel.irkki">
+              <MappingFragment StoreEntitySet="irkki">
+                <ScalarProperty Name="old" ColumnName="old" />
+                <ScalarProperty Name="aika" ColumnName="aika" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="kanava" ColumnName="kanava" />
+                <ScalarProperty Name="maara" ColumnName="maara" />
+                <ScalarProperty Name="nick" ColumnName="nick" />
+                <ScalarProperty Name="viesti" ColumnName="viesti" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lampotilaTaulu">
+            <EntityTypeMapping TypeName="internetModel.lampotilaTaulu">
+              <MappingFragment StoreEntitySet="lampotilaTaulu">
+                <ScalarProperty Name="rowId" ColumnName="rowId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="aika" ColumnName="aika" />
+                <ScalarProperty Name="tempC" ColumnName="tempC" />
+                <ScalarProperty Name="humidity" ColumnName="humidity" />
+                <ScalarProperty Name="valoisuus" ColumnName="valoisuus" />
+                <ScalarProperty Name="lampotila2" ColumnName="lampotila2" />
+                <ScalarProperty Name="lampotila1" ColumnName="lampotila1" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="irkki_old">
+            <EntityTypeMapping TypeName="internetModel.irkki_old">
+              <MappingFragment StoreEntitySet="irkki_old">
+                <ScalarProperty Name="aika" ColumnName="aika" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="kanava" ColumnName="kanava" />
+                <ScalarProperty Name="maara" ColumnName="maara" />
+                <ScalarProperty Name="nick" ColumnName="nick" />
+                <ScalarProperty Name="viesti" ColumnName="viesti" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="memos">
+            <EntityTypeMapping TypeName="internetModel.memos">
+              <MappingFragment StoreEntitySet="memos">
+                <ScalarProperty Name="url" ColumnName="url" />
+                <ScalarProperty Name="ts" ColumnName="ts" />
+                <ScalarProperty Name="rowid" ColumnName="rowid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

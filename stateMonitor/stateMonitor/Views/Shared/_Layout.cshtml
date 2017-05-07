@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/jqueryui")     
+    @Scripts.Render("~/bundles/jquery")  
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/Flot")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Tilastot", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a>IRC-tilastot</a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Yleiskatsaus", "overviewStats", "F_Results")</li>
+                            <li>@Html.ActionLink("Valittu aikaväli", "Index", "F_Results")</li>
+                            <li>@Html.ActionLink("Hae sanan mukaan", "Index", "Words")</li>
+                            <li>@Html.ActionLink("Yleisimmät sanat", "Index", "Words")</li>
+                        </ul>                    
+                    </li>
+                    <li>@Html.ActionLink("IRC-keskustelujen selaaminen", "Index", "irkkis")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+    </div>
+
+  
+    
+    
+    <style type="text/css">
+        .ui-datepicker {
+            background: #333;
+            border: 1px solid #555;
+            width: 20%;
+            color: #EEE;
+        }
+    </style>
+    <script>
+        $(function () {
+            $.datepicker.setDefaults($.extend({ showMonthAfterYear: false }, $.datepicker.regional['fi']));
+            $(".datePicker").datepicker($.datepicker.regional['fi']);
+            //$('.datePicker').datepicker('option', 'changeMonth', true);
+            //$('.datePicker').datepicker('option', 'changeYear', true);
+        });
+        $(document).ready(function () {
+            $('input[type=datetime]').datepicker({
+                dateFormat: "dd.mm.yy",
+                changeMonth: true,
+                changeYear: true,
+                showOtherMonths: true,
+                yearRange: "-10:+0"
+            });
+        })
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

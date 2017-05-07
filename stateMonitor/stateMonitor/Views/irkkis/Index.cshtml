@@ -1,0 +1,81 @@
+﻿@model stateMonitor.Models.irkkiViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+@using (Html.BeginForm("Index", "irkkis", FormMethod.Post))
+{
+    <select name="channel" id="channel">
+        @foreach (var item in Model.channels)
+        {
+            string selectedC = ViewBag.selectedChannel;
+            if (item != null && item.ToString().ToLower() == selectedC.ToLower())
+            {
+                <option selected="selected" value="@item">
+                    @item
+                </option>
+            }
+            else
+            {
+                <option value="@item">
+                    @item
+                </option>
+            }
+        }
+    </select>
+    <p>Alkuaika</p>
+    <input type="datetime" name="start" id="start" value=@ViewBag.start/>
+    <p>Loppuaika</p>
+    <input type="datetime" name="end" id="end" value=@ViewBag.end/>
+    <input type="submit" value="Hae tulokset" class="btn btn-default" />
+}
+
+<a href="#test1">OHO</a>
+
+@{
+    if (ViewBag.rowid == null)
+    {
+        <a name="test1" id="Jump"></a>
+    }
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Viesti
+        </th>
+        <th>
+            Nimimerkki
+        </th>
+        <th>
+            Aikaleima
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.messageList)
+{
+    <tr>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.viesti)
+        </td>
+        <td>
+           @Html.DisplayFor(modelItem => item.nick)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.aika)
+        </td>
+    </tr>
+}
+</table>
+
+<script>
+    function jumpTo() {
+        //alert("Image is loaded");
+        document.getElementById("Jump").scrollIntoView(true);
+    }
+</script>

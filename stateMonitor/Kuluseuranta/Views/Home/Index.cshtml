@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Kuluseuranta</h1>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4">
+        <h2>Kuluseuranta</h2>
+        <p>Tutki ja lisää menoeriä.</p>
+        <p>@Html.ActionLink("Tutki menoeriä", "Index", "kuluts")</p>
+        <p>@Html.ActionLink("Luo uusi kulu", "Create", "kuluts")</p>
+    </div>
+</div>

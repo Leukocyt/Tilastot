@@ -1,0 +1,113 @@
+﻿@model Kuluseuranta.Models.kulut
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>kulut</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.rowid)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.timestamp, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.timestamp, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.timestamp, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.tyyppi, "tyyppi", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("tyyppi", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.tyyppi, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group" id="newType">
+            <label class="control-label col-md-2" for="uusiTyyppi">Uusi tyyppi</label>
+            <div class="col-md-10">
+                <input class="form-control text-box single-line" type="text" id="uusiTyyppi" name="uusiTyyppi" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.paikkaID, "paikkaID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("paikkaID", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.paikkaID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group" id="newPlace">
+            <label class="control-label col-md-2" for="uusiTyyppi">Uusi tyyppi</label>
+            <div class="col-md-10">
+                <input class="form-control text-box single-line" type="text" id="uusiPaikka" name="uusiPaikka" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.maara, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.maara, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.maara, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.selite, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.selite, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.selite, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+<script>
+    //Alustukset
+    document.getElementById("newType").style.visibility = 'hidden';
+    document.getElementById("newPlace").style.visibility = 'hidden';
+    //Tapahtumakuuntelija
+    function listaTarkastaja(dropdownID, idToSet) {
+        var e = document.getElementById(dropdownID);
+        if (e.selectedIndex >= 0) {
+            console.log(e.selectedIndex);
+            var tyyppiIndex = e.options[e.selectedIndex].value;
+            if (tyyppiIndex == 0) {
+                document.getElementById(idToSet).style.visibility = 'visible';
+            } else {
+                document.getElementById(idToSet).style.visibility = 'hidden';
+            }
+        }
+    }
+    //Tyypin valinta
+    document.getElementById("tyyppi").addEventListener("click",
+            function () {
+                listaTarkastaja("tyyppi", "newType");
+            }
+    );
+    //Paikan valinta
+    document.getElementById("paikkaID").addEventListener("click",
+            function () {
+                listaTarkastaja("paikkaID", "newPlace");
+            }
+    );
+</script>

@@ -1,0 +1,86 @@
+﻿@model stateMonitor.Models.wordsViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<h2>Sanakohtaiset tilastot</h2>
+
+@{ 
+    string w = ViewBag.word;
+}
+
+
+<div class="col-md-6">
+    <table class="table">
+        <tr>
+            <th>
+                Vuosi
+            </th>
+            <th>
+                Lukumäärä
+            </th>
+        </tr>
+        @foreach (var item in Model.nStats)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.nick)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.count)
+                </td>
+                <td>
+                    @using (Html.BeginForm("Details", "Words", FormMethod.Post, new { target = "_blank" }))
+                    {
+                        <input type="hidden" name="nick" id="nick" value=@ViewBag.nick />
+                        <input type="hidden" name="channel" id="channel" value="@ViewBag.selectedChannel" />
+                        <input type="hidden" name="word" id="word" value=@ViewBag.word/>
+                        <input type="hidden" name="year" id="word" value=@item.nick />
+                        <input type="submit" value="Tutki viestejä" class="btn btn-default" />
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<div class="col-md-6">
+    <label class="label-primary">Vuositilastot</label>
+    <div id="plot_area" style="width:1000px;height:500px;"></div>
+</div>
+
+
+<script>
+    $(function() {
+        var model = @Html.Raw(Json.Encode(Model));
+        //FLOT
+        //var d  = model.oList;
+        var options = {
+            series: {
+                bars: {show: true, barWidth: 0.6, align: 'center' , fill: true,fillColor: { colors: [{ opacity: 0.7 }, { opacity: 0.1}]  }}
+            },
+            colors: ["#cc3300"],
+            xaxis: {
+                show : true,
+                axisLabel : 'Nick',
+                mode: "categories",
+                minTickSize: 1
+            },
+            yaxis : {
+                show : true,
+                axisLabel : 'Rivimäärä',
+                position: 'left',
+            }
+        };
+        $.plot("#plot_area", [{
+            data: model.resultLists[0].resultList
+        }], options
+        );
+
+    });
+
+</script>
+
+
+
+
+

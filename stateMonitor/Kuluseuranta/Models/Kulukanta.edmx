@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="kulutModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="kulut">
+          <Key>
+            <PropertyRef Name="rowid" />
+          </Key>
+          <Property Name="rowid" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="timestamp" Type="datetime" />
+          <Property Name="tyyppi" Type="int" />
+          <Property Name="paikkaID" Type="int" />
+          <Property Name="maara" Type="float" />
+          <Property Name="selite" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="kulutyypit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="kuvaus" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="paikat">
+          <Key>
+            <PropertyRef Name="rowid" />
+          </Key>
+          <Property Name="rowid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="selite" Type="nvarchar(max)" />
+          <Property Name="kaupunki" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_kulut_kulutyypit">
+          <End Role="kulutyypit" Type="Self.kulutyypit" Multiplicity="0..1" />
+          <End Role="kulut" Type="Self.kulut" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="kulutyypit">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="kulut">
+              <PropertyRef Name="tyyppi" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_kulut_paikat">
+          <End Role="paikat" Type="Self.paikat" Multiplicity="0..1" />
+          <End Role="kulut" Type="Self.kulut" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="paikat">
+              <PropertyRef Name="rowid" />
+            </Principal>
+            <Dependent Role="kulut">
+              <PropertyRef Name="paikkaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="F_Menot_Per_Viikko" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="start" Type="datetime" Mode="In" />
+          <Parameter Name="end" Type="datetime" Mode="In" />
+          <Parameter Name="typeList" Type="nvarchar" Mode="In" />
+          <Parameter Name="placeList" Type="nvarchar" Mode="In" />
+          <Parameter Name="groupType" Type="int" Mode="In" />
+          <Parameter Name="resMax" Type="int" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="rowid" Type="int" Nullable="false" />
+                <Property Name="weekNumber" Type="nvarchar" MaxLength="300" />
+                <Property Name="summa" Type="float" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="S_Menot_Per_Viikko" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="start" Type="datetime" Mode="In" />
+          <Parameter Name="end" Type="datetime" Mode="In" />
+          <Parameter Name="typeList" Type="nvarchar" Mode="In" />
+          <Parameter Name="placeList" Type="nvarchar" Mode="In" />
+          <Parameter Name="groupType" Type="int" Mode="In" />
+          <Parameter Name="resMax" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="kulutModelStoreContainer">
+          <EntitySet Name="kulut" EntityType="Self.kulut" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="kulutyypit" EntityType="Self.kulutyypit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="paikat" EntityType="Self.paikat" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_kulut_kulutyypit" Association="Self.FK_kulut_kulutyypit">
+            <End Role="kulutyypit" EntitySet="kulutyypit" />
+            <End Role="kulut" EntitySet="kulut" />
+          </AssociationSet>
+          <AssociationSet Name="FK_kulut_paikat" Association="Self.FK_kulut_paikat">
+            <End Role="paikat" EntitySet="paikat" />
+            <End Role="kulut" EntitySet="kulut" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="kulutModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="kulut">
+          <Key>
+            <PropertyRef Name="rowid" />
+          </Key>
+          <Property Name="rowid" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="timestamp" Type="DateTime" Precision="3" />
+          <Property Name="tyyppi" Type="Int32" />
+          <Property Name="paikkaID" Type="Int32" />
+          <Property Name="maara" Type="Double" />
+          <Property Name="selite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="kulutyypit" Relationship="Self.FK_kulut_kulutyypit" FromRole="kulut" ToRole="kulutyypit" />
+          <NavigationProperty Name="paikat" Relationship="Self.FK_kulut_paikat" FromRole="kulut" ToRole="paikat" />
+        </EntityType>
+        <EntityType Name="kulutyypit">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="kuvaus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="kulut" Relationship="Self.FK_kulut_kulutyypit" FromRole="kulutyypit" ToRole="kulut" />
+        </EntityType>
+        <EntityType Name="paikat">
+          <Key>
+            <PropertyRef Name="rowid" />
+          </Key>
+          <Property Name="rowid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="selite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="kaupunki" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="kulut" Relationship="Self.FK_kulut_paikat" FromRole="paikat" ToRole="kulut" />
+        </EntityType>
+        <Association Name="FK_kulut_kulutyypit">
+          <End Role="kulutyypit" Type="Self.kulutyypit" Multiplicity="0..1" />
+          <End Role="kulut" Type="Self.kulut" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="kulutyypit">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="kulut">
+              <PropertyRef Name="tyyppi" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_kulut_paikat">
+          <End Role="paikat" Type="Self.paikat" Multiplicity="0..1" />
+          <End Role="kulut" Type="Self.kulut" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="paikat">
+              <PropertyRef Name="rowid" />
+            </Principal>
+            <Dependent Role="kulut">
+              <PropertyRef Name="paikkaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="kulutEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="kulut" EntityType="Self.kulut" />
+          <EntitySet Name="kulutyypit" EntityType="Self.kulutyypit" />
+          <EntitySet Name="paikat" EntityType="Self.paikat" />
+          <AssociationSet Name="FK_kulut_kulutyypit" Association="Self.FK_kulut_kulutyypit">
+            <End Role="kulutyypit" EntitySet="kulutyypit" />
+            <End Role="kulut" EntitySet="kulut" />
+          </AssociationSet>
+          <AssociationSet Name="FK_kulut_paikat" Association="Self.FK_kulut_paikat">
+            <End Role="paikat" EntitySet="paikat" />
+            <End Role="kulut" EntitySet="kulut" />
+          </AssociationSet>
+          <FunctionImport Name="F_Menot_Per_Viikko" IsComposable="true" ReturnType="Collection(kulutModel.F_Menot_Per_Viikko_Result)">
+            <Parameter Name="start" Mode="In" Type="DateTime" />
+            <Parameter Name="end" Mode="In" Type="DateTime" />
+            <Parameter Name="typeList" Mode="In" Type="String" />
+            <Parameter Name="placeList" Mode="In" Type="String" />
+            <Parameter Name="groupType" Mode="In" Type="Int32" />
+            <Parameter Name="resMax" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="S_Menot_Per_Viikko" ReturnType="Collection(kulutModel.S_Menot_Per_Viikko_Result)">
+            <Parameter Name="start" Mode="In" Type="DateTime" />
+            <Parameter Name="end" Mode="In" Type="DateTime" />
+            <Parameter Name="typeList" Mode="In" Type="String" />
+            <Parameter Name="placeList" Mode="In" Type="String" />
+            <Parameter Name="groupType" Mode="In" Type="Int32" />
+            <Parameter Name="resMax" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="F_Menot_Per_Viikko_Result">
+          <Property Type="Int32" Name="rowid" Nullable="false" />
+          <Property Type="String" Name="weekNumber" Nullable="true" MaxLength="300" />
+          <Property Type="Double" Name="summa" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="S_Menot_Per_Viikko_Result">
+          <Property Type="Int32" Name="rowid" Nullable="false" />
+          <Property Type="String" Name="weekNumber" Nullable="true" MaxLength="300" />
+          <Property Type="Double" Name="summa" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="kulutModelStoreContainer" CdmEntityContainer="kulutEntities">
+          <EntitySetMapping Name="kulut">
+            <EntityTypeMapping TypeName="kulutModel.kulut">
+              <MappingFragment StoreEntitySet="kulut">
+                <ScalarProperty Name="rowid" ColumnName="rowid" />
+                <ScalarProperty Name="timestamp" ColumnName="timestamp" />
+                <ScalarProperty Name="tyyppi" ColumnName="tyyppi" />
+                <ScalarProperty Name="paikkaID" ColumnName="paikkaID" />
+                <ScalarProperty Name="maara" ColumnName="maara" />
+                <ScalarProperty Name="selite" ColumnName="selite" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="kulutyypit">
+            <EntityTypeMapping TypeName="kulutModel.kulutyypit">
+              <MappingFragment StoreEntitySet="kulutyypit">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="kuvaus" ColumnName="kuvaus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="paikat">
+            <EntityTypeMapping TypeName="kulutModel.paikat">
+              <MappingFragment StoreEntitySet="paikat">
+                <ScalarProperty Name="rowid" ColumnName="rowid" />
+                <ScalarProperty Name="selite" ColumnName="selite" />
+                <ScalarProperty Name="kaupunki" ColumnName="kaupunki" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="F_Menot_Per_Viikko" FunctionName="kulutModel.Store.F_Menot_Per_Viikko">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="kulutModel.F_Menot_Per_Viikko_Result">
+                <ScalarProperty Name="rowid" ColumnName="rowid" />
+                <ScalarProperty Name="weekNumber" ColumnName="weekNumber" />
+                <ScalarProperty Name="summa" ColumnName="summa" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="S_Menot_Per_Viikko" FunctionName="kulutModel.Store.S_Menot_Per_Viikko">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="kulutModel.S_Menot_Per_Viikko_Result">
+                <ScalarProperty Name="rowid" ColumnName="rowid" />
+                <ScalarProperty Name="weekNumber" ColumnName="weekNumber" />
+                <ScalarProperty Name="summa" ColumnName="summa" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

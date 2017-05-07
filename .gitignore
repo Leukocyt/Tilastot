@@ -250,3 +250,9 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/stateMonitor/Kuluseuranta/Web.config
+/stateMonitor/stateMonitor/Web.config
+/stateMonitor/Kuluseuranta/Web.Release.config
+/stateMonitor/Kuluseuranta/Web.Debug.config
+/stateMonitor/stateMonitor/Web.Release.config
+/stateMonitor/stateMonitor/Web.Debug.config

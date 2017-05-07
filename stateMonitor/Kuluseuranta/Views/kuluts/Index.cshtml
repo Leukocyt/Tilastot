@@ -1,0 +1,75 @@
+﻿@model Kuluseuranta.Models.KulutViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<div class="row">
+    <h2>Kulut</h2>
+    <p> Alku: @Model.periodStart , Loppu: @Model.periodEnd</p>
+
+    @using (Html.BeginForm("Index", "kuluts", FormMethod.Post))
+    {
+        <div class="col-md-4">
+            <p>Alkuaika</p>
+            <input type="datetime" name="start" id="start" value=@ViewBag.start />
+            <p>Loppuaika</p>
+            <input type="datetime" name="end" id="end" value=@ViewBag.end />
+            <input type="submit" value="Hae" class="btn btn-default" />
+        </div>
+        <div class="col-md-7">           
+            @foreach (var insurer in Model.typeList)
+            {
+            <input type="checkbox" name="sList" value="@insurer.Value" checked="@insurer.Selected" /> @insurer.Text
+            }
+        </div>
+        <div class="col-md-1">
+            <input id="allSelect" type="checkbox" name="all" value="Kaikki?" /> Valihte kaikki?
+        </div>
+    }
+</div>
+<div>
+    @Html.ActionLink("Luo uusi kulu", "Create")
+</div>
+<div class="row">
+    <div class="col-md-10">
+        <table class="table">
+            <tr>
+                <th>Aika</th>
+                <th>Kulutyyppi</th>
+                <th>Paikka</th>
+                <th>Hinta (€)</th>
+                <th>Selite</th>
+
+            </tr>
+            @{
+                foreach (var r in Model.kulut)
+                {
+                    <tr>
+                        <td>@r.timestamp </td>
+                        <td>@r.kulutyypit.kuvaus </td>
+                        <td>@r.paikat.selite </td>
+                        <td>@r.maara</td>
+                        <td>@r.selite</td>
+                        <td>
+                            @Html.ActionLink("Muokkaa", "Edit", new {id = r.rowid })
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div class="col-md-2">
+        <b>Yhteensä:</b> @Model.kulujenSumma €
+    </div>
+</div>
+
+<script>
+    $('#allSelect').click(function (event) {
+        var selected = this.checked;
+        // Iterate each checkbox
+        $(':checkbox').each(function () {
+            this.checked = selected;
+         });
+    });
+
+</script>
+

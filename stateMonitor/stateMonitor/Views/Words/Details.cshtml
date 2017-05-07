@@ -1,0 +1,60 @@
+﻿@model IEnumerable<stateMonitor.irkki>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.viesti)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.nick)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.maara)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.kanava)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.aika)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.viesti)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nick)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.maara)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.kanava)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.aika)
+            </td>
+            <td>
+
+                @using (Html.BeginForm("Spesific", "irkkis", FormMethod.Post, new { target = "_blank" }))
+                {
+                    <input type="hidden" name="d" id="rowId" value=@item.aika />
+                    <input type="hidden" name="rowId" id="rowId" value=@item.id />
+                    <input type="submit" value="Tutki keskustelua viestin ympäriltä" class="btn btn-default" />
+                }
+            </td>
+
+        </tr>
+    }
+
+</table>

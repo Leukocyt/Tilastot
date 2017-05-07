@@ -1,0 +1,151 @@
+﻿@model stateMonitor.Models.FResultsClass
+
+@{
+    ViewBag.Title = "Index";
+}
+<p>
+    @Html.ActionLink("<-- Yleisnäkymä", "overviewStats", new { channel = ViewBag.selectedChannel })
+</p>
+
+<div class="row">
+    <h1>@ViewBag.start - @ViewBag.end</h1>
+    <h2>Käyttäjäkohtaiset rivimäärät</h2>
+    @using (Html.BeginForm("Index", "F_Results", FormMethod.Post))
+    {
+        <select name="channel" id="channel">
+            @foreach (var item in Model.channels)
+            {
+                string selectedC = ViewBag.selectedChannel;
+                if (item != null &&  item.ToString().ToLower() == selectedC.ToLower())
+                {
+                    <option selected ="selected" value="@item">
+                        @item
+                    </option>
+                }
+                else
+                {
+                    <option value="@item">
+                        @item
+                    </option>
+                }
+            }
+        </select>
+        <p>Alkuaika</p>
+        <input type="datetime" name="start" id="start" value=@ViewBag.start />
+        <p>Loppuaika</p>
+        <input type="datetime" name="end" id="end" value=@ViewBag.end />
+        <input type="submit" value="Hae tulokset" class="btn btn-default" />
+    }
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-4">
+        <label class="label-primary">Käyttäjäkohtaiset rivimäärät</label>
+        <table class="table">
+            <tr>
+                <th>
+                    Nicki
+                </th>
+                <th>
+                    Määrä
+                </th>
+            </tr>
+
+            @foreach (var item in Model.fList)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.nick, "GraphH", new { start = ViewBag.start, end = ViewBag.end, nick = item.nick }, new { target = "_blank" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Count)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="col-md-4">
+        <div id="plot_area" style="width:600px;height:500px;"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <label class="label-primary">Tuntitilastot</label>
+        <div id="plot_area2" class="flotti"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <label class="label-primary">Kuukausitilastot</label>
+
+        <div id="plot_area3" style="width:1000px;height:500px;"></div>
+    </div>
+</div>
+
+    <script>
+    $(function() {
+        var model = @Html.Raw(Json.Encode(Model));
+        //FLOT
+        //var d  = model.oList;
+        var d = model.flotResultList;
+        var d2 = model.flotResultList2;      
+        var d3 = model.barGraphRes;
+        var options = {
+            series: {
+                bars: {show: true, barWidth: 0.6, align: 'center' , fill: true,fillColor: { colors: [{ opacity: 0.7 }, { opacity: 0.1}]  }}
+            },
+            colors: ["#cc3300"],
+            xaxis: {
+                show : true,
+                axisLabel : 'Viikko',
+                mode: "categories",
+                minTickSize: 1
+            },
+            yaxis : {
+                show : true,
+                axisLabel : '€',
+                position: 'left',
+            }
+        };
+        $.plot("#plot_area", [{
+            data: d
+        }], options
+        );
+
+        var options2 = {
+            series: {
+                bars: {show: true, barWidth: 0.6, align: 'center' , fill: true,fillColor: { colors: [{ opacity: 0.7 }, { opacity: 0.1}]  }}
+            },
+            colors: ["#cc3300"],
+            xaxis: {
+                show : true,
+                axisLabel : 'Tunti',
+                mode: "categories",
+                minTickSize: 1
+            },
+            yaxis : {
+                show : true,
+                axisLabel : 'Rivejä',
+                position: 'left',
+            }
+        };
+        $.plot("#plot_area2", [{
+            data: d2
+        }], options2
+        );
+        $.plot("#plot_area3", [{
+            data: model.resultLists[0].resultList
+        }], options2
+        );
+
+    });
+
+    </script>
+
+
+
+
+

@@ -1,0 +1,58 @@
+﻿@model Kuluseuranta.Models.kulut
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>kulut</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.timestamp)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.timestamp)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.maara)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.maara)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.selite)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.selite)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.kulutyypit.kuvaus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.kulutyypit.kuvaus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.paikat.selite)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.paikat.selite)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.rowid }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

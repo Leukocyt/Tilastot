@@ -1,0 +1,140 @@
+﻿@model stateMonitor.Models.FResultsClass
+
+@{
+    ViewBag.Title = "Index";
+}
+<div class="row">
+    <h1>Yleiskatsaus</h1>    
+    @using (Html.BeginForm("overviewStats", "F_Results", FormMethod.Post))
+    {
+        <select name="channel" id="channel">
+            @foreach (var item in Model.channels)
+            {
+                string selectedC = ViewBag.selectedChannel;
+                if (item != null && item.ToString().ToLower() == selectedC.ToLower())
+                {
+                    <option selected ="selected" value="@item">
+                        @item
+                    </option>
+                }
+                else
+                {
+                    <option value="@item">
+                        @item
+                    </option>
+                }
+            }
+        </select>
+        <input type="submit" value="Hae tulokset" class="btn btn-default" />
+    }
+</div>
+
+<div class="row">    
+    <div class="col-md-4">
+        <label class="label-primary">Käyttäjäkohtaiset rivimäärät</label>
+        <table class="table">
+            <tr>
+                <th>
+                    Nicki
+                </th>
+                <th>
+                    Määrä
+                </th>
+            </tr>
+
+            @foreach (var item in Model.fList)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.nick, "GraphH", new { start = ViewBag.start, end = ViewBag.end, nick = item.nick }, new { target = "_blank" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Count)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="col-md-4">
+        <div id="plot_area" style="width:600px;height:500px;"></div>
+    </div>
+</div>
+<div class="row">
+    <p> Klikkaa vuotta kuvaavaa pylväsdiagrammia päästäksesi tarkempiin tilastoihin!</p>
+    <div class="col-md-4">        
+        <label class="label-primary">Vuositilastot</label>
+        <div id="plot_area2" style="width:1000px;height:500px;"></div>
+    </div>
+</div>
+
+    <script>
+    $(function() {
+        var model = @Html.Raw(Json.Encode(Model));
+        //FLOT
+        //var d  = model.oList;
+        var d = model.flotResultList;
+        var d2 = model.flotResultList2;
+        var options = {
+            series: {
+                bars: {show: true, align: 'center', barWidth: 0.6, fill: true,fillColor: { colors: [{ opacity: 0.7 }, { opacity: 0.1}]  }}
+            },
+            colors: ["#cc3300"],
+            xaxis: {
+                show : true,
+                axisLabel : 'Nick',
+                tickLength: 0,
+                mode: "categories"
+            },
+            yaxis : {
+                show : true,
+                axisLabel : 'Rivimäärä',
+                position: 'left',
+            }
+            ,
+            grid:  {
+                clickable:true
+            }
+        };
+        $.plot("#plot_area", [{
+            data: d
+        }], options
+        );
+
+        var options2 = {
+            series: {
+                bars: {show: true, align: 'center', barWidth: 0.6 , fill: true,fillColor: { colors: [{ opacity: 0.7 }, { opacity: 0.1}]  }}
+            },
+            colors: ["#cc3300"],
+            xaxis: {
+                show : true,
+                axisLabel : 'Tunti',
+                tickLength: 0,
+                mode: "categories"
+            },
+            yaxis : {
+                show : true,
+                axisLabel : 'Rivejä',
+                position: 'left',
+            }
+            ,
+            grid:  {
+                clickable:true
+            }
+        };
+        $.plot("#plot_area2", [{
+            data: d2
+        }], options2
+        );
+        $('#plot_area2').bind("plotclick", function(event,pos,obj) {
+            var selYear = d2[obj.dataIndex][0];
+            var channel = "@Html.Raw(ViewBag.selectedChannelURL)";
+            window.location.replace("Index?Year=" + selYear + "&channel=" + channel);
+        });
+    });
+
+    </script>
+
+
+
+
+

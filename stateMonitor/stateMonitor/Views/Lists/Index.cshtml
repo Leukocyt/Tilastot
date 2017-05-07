@@ -1,0 +1,35 @@
+﻿@model stateMonitor.Models.Memo
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout_No_Nav.cshtml";
+}
+<h2>@Model.name</h2>
+
+<p>Luotu: @Model.created_on</p>
+
+<div>
+    <table class="table">
+        <tr>
+            <th>
+                Päivämäärä
+            </th>
+            <th>
+                Aihe
+            </th>
+        </tr>
+
+        @foreach (var item in Model.lines)
+        {
+            <tr>
+                <td>
+                    @item.created_on
+                </td>
+                <td>
+                    @item.content
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+

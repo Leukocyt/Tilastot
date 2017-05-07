@@ -1,0 +1,64 @@
+﻿@model stateMonitor.irkki
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>irkki</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.viesti)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.viesti)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.nick)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.nick)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.maara)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.maara)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.kanava)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.kanava)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.aika)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.aika)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

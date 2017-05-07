@@ -1,0 +1,202 @@
+﻿@model Kuluseuranta.Models.RaportitViewModel    
+@{
+    ViewBag.Title = "Index";
+}
+<div class="row">
+    @using (Html.BeginForm("Index", "Raportit", FormMethod.Post))
+    {
+        <div class="col-md-4">
+            <p>Alkuaika</p>
+            <input type="datetime" name="start" id="start" value=@ViewBag.start />
+            <p>Loppuaika</p>
+            <input type="datetime" name="end" id="end" value=@ViewBag.end />
+            <input type="submit" value="Hae" class="btn btn-default" />
+            <p>Tulosten maksimimäärä</p>
+            <input type="number" name="resMax" id="resMax" value="@ViewBag.resMax" />
+        </div>
+        <div class="col-md-7">
+            @foreach (var insurer in Model.typeList)
+            {
+                <input type="checkbox" name="sList" value="@insurer.Value" checked="@insurer.Selected" /> @insurer.Text
+            }
+        </div>
+        <div class="col-md-1">
+            <input id="allSelect" type="checkbox" name="all" value="Kaikki?" /> Valihte kaikki?
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div id="plot_area" class="flotti"></div>
+    </div>
+    <div class="col-md-6">
+        <div id="plot_area2" class="flotti"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table">
+            <tr>
+                <th>Paikka</th>
+                <th>Summa €</th>
+            </tr>
+            @foreach(var r in Model.paikkaListaus)
+            {
+                <tr>
+                    <td>@r.weekNumber</td>
+                    <td>@r.summa</td>
+                </tr>
+            }
+            @{ 
+                <tr>
+                    <td><b>Yhteensä</b></td>
+                    <td><b>@Model.totalSum </b></td>
+                </tr>
+            }
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+    var totalSum = 0;
+    var options = {
+        series: {
+            bars: { show: true, barWidth: 0.6, align: 'center', fill: true, fillColor: { colors: [{ opacity: 0.7 }, { opacity: 0.1 }] } }
+        },
+        colors: ["#cc3300"],
+        xaxis: {
+            show: true,
+            axisLabel: 'Viikko',
+            mode: "categories",
+            minTickSize: 1
+        },
+        yaxis: {
+            show: true,
+            axisLabel: '€',
+            position: 'left',
+        }
+            ,
+        grid:  {
+            clickable:true,
+            hoverable: true,
+        }
+    };
+    var options2 = {
+        series: {
+            pie: {
+                show: true
+            }
+        }
+        //colors: ["#cc3300"],
+        /*xaxis: {
+            show: true,
+            axisLabel: 'Tyyppi',
+            mode: "categories",
+            minTickSize: 1
+        },*/
+        /*yaxis: {
+            show: true,
+            axisLabel: '€',
+            position: 'left',
+        }*/
+    };
+
+    function labelFormatter(label, series) {
+
+        return "<div style='font-size:8pt; text-align:center; padding:2px; color:white;'>" + label + "<br/>" + Math.round(series.percent) +  "%</div>";
+    }
+    $(function() {
+        //Tooltippi
+        $("<div id='tooltip'></div>").css({
+            position: "absolute",
+            display: "none",
+            border: "1px solid #fdd",
+            padding: "2px",
+            "background-color": "#fee",
+            opacity: 0.80
+        }).appendTo("body");
+
+        var model = @Html.Raw(Json.Encode(Model));
+        totalSum = model.totalSum;
+        var d = model.gList[0].flotResultList;
+        var d2 = model.gList[1].flotResultList;
+        //Piirakka
+        var pieData = [];
+        var len = d2.length;
+        var i = 0;
+        for (var i = 0; i < len; i++)
+        {
+            pieData[i] = {
+                label: d2[i][0] + " " + d2[i][1] + "€",
+                data: d2[i][1]
+            };
+        }
+        /*
+        var pieData = [
+        	{ label: "Series1",  data: 10},
+        	{ label: "Series2",  data: 30},
+            { label: "Series3",  data: 90},
+        	{ label: "Series4",  data: 70},
+        	{ label: "Series5",  data: 80},
+        	{ label: "Series6",  data: 110}
+        ];
+        */
+        $.plot("#plot_area", [{
+            data: d
+        }], options
+        );
+        $.plot('#plot_area2', pieData, {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+                    label: {
+                        show: true,
+                        radius: 3/4,
+                        formatter: labelFormatter,
+                        background: {
+                            opacity: 0.5,
+                            color: '#000'
+                        }
+                    }
+                }
+            },
+            legend: {
+                show: false
+            }
+        });
+
+        $('#plot_area').bind("plotclick", function(event,pos,obj) {
+            var selYear = d[obj.dataIndex][0];
+            console.log(selYear);
+            //window.location.replace("../kuluts/IndexWeekNumber?WeekNumber=" + selYear + "&sList=@ViewBag.tyyppiLista");
+            var win = window.open("/kuluts/IndexWeekNumber?WeekNumber=" + selYear + "&sList=@ViewBag.tyyppiLista", '_blank');
+            //var win = window.open(ulr,'_blank' );
+            win.focus();
+        });
+        $('#plot_area').bind("plothover", function (event, pos, item) {
+            if (item) {
+                var x = item.datapoint[0].toFixed(2),
+                    y = item.datapoint[1].toFixed(2);
+
+                $("#tooltip").html("Kulut " + y + " €")
+                    .css({top: item.pageY+5, left: item.pageX+5})
+                    .fadeIn(200);
+            } else {
+                $("#tooltip").hide();
+            }
+        });
+
+    });
+    $('#allSelect').click(function (event)
+    {
+        var selected = this.checked;
+        // Iterate each checkbox
+        $(':checkbox').each(function () {
+            this.checked = selected;
+        });
+    });
+</script>
+
