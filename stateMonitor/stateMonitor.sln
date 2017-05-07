@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stateMonitor", "stateMonito
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuluseuranta", "Kuluseuranta\Kuluseuranta.csproj", "{A04A1F88-AFB3-45D0-8F77-6098FA2FA6CB}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Kulukanta", "Kulukanta\Kulukanta.sqlproj", "{1A421BAA-BF30-45B2-8B30-C7F08B4C3BB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,12 @@ Global
 		{A04A1F88-AFB3-45D0-8F77-6098FA2FA6CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A04A1F88-AFB3-45D0-8F77-6098FA2FA6CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A04A1F88-AFB3-45D0-8F77-6098FA2FA6CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A421BAA-BF30-45B2-8B30-C7F08B4C3BB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A421BAA-BF30-45B2-8B30-C7F08B4C3BB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A421BAA-BF30-45B2-8B30-C7F08B4C3BB9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{1A421BAA-BF30-45B2-8B30-C7F08B4C3BB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A421BAA-BF30-45B2-8B30-C7F08B4C3BB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A421BAA-BF30-45B2-8B30-C7F08B4C3BB9}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
