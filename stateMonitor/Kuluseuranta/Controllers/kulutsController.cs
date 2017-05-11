@@ -10,11 +10,11 @@ using Kuluseuranta.Models;
 
 namespace Kuluseuranta.Controllers
 {
-    [Authorize(Roles = "Raportit")]
     public class kulutsController : Controller
     {
         private kulutEntities db = new kulutEntities();
-        // GET: kuluts 
+
+        // GET: kuluts
         public ActionResult Index(DateTime? start, DateTime? end, string[] sList = null, string plainList = "")
         {
 
@@ -44,11 +44,13 @@ namespace Kuluseuranta.Controllers
                 m.kulut = db.kulut.Include("paikat").Include("kulutyypit").Where(x => x.timestamp >= m.periodStart && x.timestamp <= m.periodEnd && types.Contains(x.tyyppi) ).OrderByDescending(x => x.timestamp).ToList();                
                 m.typeList = commonFunctions.filterList(m.tyypit, sList);
             }
+            ////var result = persons.Where(p => p.Locations.Any(l => searachIds.Contains(l.Id)));
             m.kulujenSumma = m.kulut.Sum(x => x.maara.Value);
             ViewBag.start = m.periodStart;
             ViewBag.end = m.periodEnd;
             return View(m);
         }
+
 
         public ActionResult IndexWeekNumber(int WeekNumber, string sList = null, int year = -1)
         {
@@ -57,6 +59,8 @@ namespace Kuluseuranta.Controllers
             DateTime end = start.AddDays(7).AddMilliseconds(-1);
             return RedirectToAction("Index", new { start = start, end = end, plainList = sList});
         }
+
+        // GET: kuluts/Details/5
         public ActionResult Details(long? id)
         {
             if (id == null)
@@ -71,6 +75,7 @@ namespace Kuluseuranta.Controllers
             return View(kulut);
         }
 
+        // GET: kuluts/Create
         public ActionResult Create()
         {
             //Tyypit
@@ -195,6 +200,7 @@ namespace Kuluseuranta.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
