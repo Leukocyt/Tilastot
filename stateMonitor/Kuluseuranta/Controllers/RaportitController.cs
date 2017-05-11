@@ -10,6 +10,7 @@ using Kuluseuranta.Models;
 
 namespace Kuluseuranta.Controllers
 {
+    [Authorize(Roles = "Raportit")]
     public class RaportitController : Controller
     {
         private kulutEntities db = new kulutEntities();
