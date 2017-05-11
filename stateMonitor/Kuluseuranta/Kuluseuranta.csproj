@@ -172,9 +172,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\commonFunctions.cs" />
-    <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\KulutController.cs" />
     <Compile Include="Controllers\RaportitController.cs" />
     <Compile Include="Controllers\kulutsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
