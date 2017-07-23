@@ -189,6 +189,7 @@
           <Property Type="Int32" Name="rowid" Nullable="false" />
           <Property Type="String" Name="weekNumber" Nullable="true" MaxLength="300" />
           <Property Type="Double" Name="summa" Nullable="true" />
+          <Property Type="String" Name="ident" Nullable="true" MaxLength="100" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -240,6 +241,7 @@
                 <ScalarProperty Name="rowid" ColumnName="rowid" />
                 <ScalarProperty Name="weekNumber" ColumnName="weekNumber" />
                 <ScalarProperty Name="summa" ColumnName="summa" />
+                <ScalarProperty Name="ident" ColumnName="ident" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

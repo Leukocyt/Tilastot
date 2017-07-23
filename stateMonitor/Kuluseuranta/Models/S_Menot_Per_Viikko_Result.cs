@@ -16,5 +16,6 @@ namespace Kuluseuranta.Models
         public int rowid { get; set; }
         public string weekNumber { get; set; }
         public Nullable<double> summa { get; set; }
+        public string ident { get; set; }
     }
 }

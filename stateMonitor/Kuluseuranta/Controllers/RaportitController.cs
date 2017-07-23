@@ -46,7 +46,7 @@ namespace Kuluseuranta.Controllers
                 List<S_Menot_Per_Viikko_Result> weeklySum = db.S_Menot_Per_Viikko(startForQuery,endForQuery, tyyppiLista, "", (int)reports_kuluTyypit.weeknumber, resMax ).ToList();
                 rVM.gList.Add(new flotGraphModel { flotResultList = (from s in weeklySum select new object[] { s.weekNumber, s.summa }).ToList(), graphTitle = "Viikottaiset kulut" });
                 weeklySum = db.S_Menot_Per_Viikko(startForQuery, endForQuery, tyyppiLista, "", (int)reports_kuluTyypit.type, resMax).ToList();
-                rVM.gList.Add(new flotGraphModel { flotResultList = (from s in weeklySum select new object[] { s.weekNumber, s.summa }).ToList(), graphTitle = "Kulut tyypeittäin" });
+                rVM.gList.Add(new flotGraphModel { flotResultList = (from s in weeklySum select new object[] { s.weekNumber, s.summa, s.ident }).ToList(), graphTitle = "Kulut tyypeittäin" });
                 rVM.typeList = commonFunctions.filterList(tList, sList);
                 rVM.paikkaListaus = db.F_Menot_Per_Viikko(startForQuery, endForQuery, tyyppiLista, "", (int)reports_kuluTyypit.place, resMax).ToList(); 
             }
@@ -60,6 +60,9 @@ namespace Kuluseuranta.Controllers
             ViewBag.end = endForQuery;
             ViewBag.resMax = resMax;
             ViewBag.tyyppiLista = tyyppiLista;
+            var formatForPageSwitches = "yyyy/MM/dd";
+            ViewBag.startFormatted = startForQuery.ToString(formatForPageSwitches);
+            ViewBag.endFormatted = endForQuery.ToString(formatForPageSwitches);
             return View(rVM);
         }
 
