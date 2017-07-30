@@ -59,7 +59,13 @@ namespace Kuluseuranta.Controllers
             DateTime end = start.AddDays(7).AddMilliseconds(-1);
             return RedirectToAction("Index", new { start = start, end = end, plainList = sList});
         }
-
+        public ActionResult IndexMonthYear(int year, int month, string sList = null)
+        {
+            DateTime start = new DateTime(year, month, 1);
+            DateTime end = start.AddMonths(1).AddSeconds(-1);
+            return RedirectToAction("Index", new { start = start, end = end, plainList = sList });
+            //return null;
+        }
         // GET: kuluts/Details/5
         public ActionResult Details(long? id)
         {

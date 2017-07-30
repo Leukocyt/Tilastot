@@ -15,7 +15,8 @@ namespace Kuluseuranta.Controllers
     {
         weeknumber = 0,
         type = 1,
-        place = 2
+        place = 2,
+        month = 3
     }
 
     public static class commonFunctions
