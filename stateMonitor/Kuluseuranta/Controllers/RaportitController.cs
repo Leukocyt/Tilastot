@@ -45,7 +45,8 @@ namespace Kuluseuranta.Controllers
                 tyyppiLista = commonFunctions.formStringList(types);
                 //By week number
                 List<S_Menot_Per_Viikko_Result> weeklySum = db.S_Menot_Per_Viikko(startForQuery,endForQuery, tyyppiLista, "", (int)reports_kuluTyypit.weeknumber, resMax ).ToList();
-                rVM.gList.Add(new flotGraphModel { flotResultList = (from s in weeklySum select new object[] { s.weekNumber, s.summa }).ToList(), graphTitle = "Viikottaiset kulut" });
+                //, addInfoRows = (from v in weeklySum select v.ident).ToList() )
+                rVM.gList.Add(new flotGraphModel { flotResultList = (from s in weeklySum select new object[] { s.weekNumber, s.summa}).ToList(), graphTitle = "Viikottaiset kulut",addInfoRows = (from v in weeklySum select v.ident).ToList()});
                 //By Type
                 weeklySum = db.S_Menot_Per_Viikko(startForQuery, endForQuery, tyyppiLista, "", (int)reports_kuluTyypit.type, resMax).ToList();
                 rVM.gList.Add(new flotGraphModel { flotResultList = (from s in weeklySum select new object[] { s.weekNumber, s.summa, s.ident }).ToList(), graphTitle = "Kulut tyypeittäin" });

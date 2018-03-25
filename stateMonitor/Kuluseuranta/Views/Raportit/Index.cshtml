@@ -109,6 +109,7 @@
         }
     };
     var d = [];
+    var dAddInfo = [];
     var d2 = [];
     var d3 = [];
     var monthSel = false;
@@ -131,6 +132,7 @@
         var model = @Html.Raw(Json.Encode(Model));
         totalSum = model.totalSum;
         d = model.gList[0].flotResultList;
+        dAddInfo = model.gList[0].addInfoRows;
         d2 = model.gList[1].flotResultList;
         d3 = model.gList[2].flotResultList;
         //Piirakka
@@ -156,11 +158,15 @@
             var selYear = 0; //d[obj.dataIndex][0];
             console.log(selYear);
             var openUrl = "";
-            if( !monthSel) {
+            var splitting = "";
+            if( !monthSel) 
+            {
                 selYear = d[obj.dataIndex][0];
-                openUrl = "/kuluts/IndexWeekNumber?WeekNumber=" + selYear + "&sList=@ViewBag.tyyppiLista";
-            } else {
-                var splitting = d3[obj.dataIndex][0].split(".");
+                splitting = dAddInfo[obj.dataIndex].split(".");
+                openUrl = "/kuluts/IndexWeekNumber?WeekNumber=" + splitting[1] + "&year=" + splitting[0] + "&sList=@ViewBag.tyyppiLista";
+            } else 
+            {
+                splitting = d3[obj.dataIndex][0].split(".");
                 openUrl = "/kuluts/IndexMonthYear?year=" + splitting[0] + "&month=" + splitting[1] + "&sList=@ViewBag.tyyppiLista";
             }
             var win = window.open(openUrl, '_blank');

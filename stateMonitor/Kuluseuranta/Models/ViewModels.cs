@@ -33,11 +33,13 @@ namespace Kuluseuranta.Models
         public string graphTitle { get; set; }
         public List<object[]> flotResultList { get; set; }
 
+        public List<string> addInfoRows { get; set; }
+
         public flotGraphModel()
         {
             flotResultList = new List<object[]>();
+            addInfoRows = new List<string>();
         }
-
     }
 
     public class RaportitViewModel
