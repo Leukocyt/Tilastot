@@ -18,11 +18,12 @@ namespace Kuluseuranta.Controllers
         public ActionResult Index(DateTime? start, DateTime? end, string[] sList = null, int resMax = 5)
         {
             RaportitViewModel rVM = new RaportitViewModel();
-            ////var result = persons.Where(p => p.Locations.Any(l => searachIds.Contains(l.Id)));
             DateTime startForQuery, endForQuery;
             if( start == null)
             {
+                /*By default, go 2 months back and to the first day of the month.*/
                 startForQuery = DateTime.Now.AddMonths(-2);
+                startForQuery = new DateTime(startForQuery.Year, startForQuery.Month, startForQuery.Day);
                 endForQuery = DateTime.Now;
             } else
             {

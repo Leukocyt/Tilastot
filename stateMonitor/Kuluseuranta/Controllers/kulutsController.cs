@@ -10,14 +10,13 @@ using Kuluseuranta.Models;
 
 namespace Kuluseuranta.Controllers
 {
+    //[Authorize(Roles = @"Raportit")]
     public class kulutsController : Controller
     {
         private kulutEntities db = new kulutEntities();
 
-        // GET: kuluts
         public ActionResult Index(DateTime? start, DateTime? end, string[] sList = null, string plainList = "")
         {
-
             if (plainList != "")
                 sList = plainList.Split(',');
             KulutViewModel m = new KulutViewModel();
@@ -84,14 +83,9 @@ namespace Kuluseuranta.Controllers
         // GET: kuluts/Create
         public ActionResult Create()
         {
-            //Tyypit
-            List<kulutyypit> tyypit = db.kulutyypit.ToList();
-            tyypit.Add(new kulutyypit { id = 0, kuvaus = "Lisää uusi!" });
-            //Paikat
-            List<paikat> paikat = db.paikat.ToList();
-            paikat.Add(new paikat { rowid = 0, selite = "Lisää uusi!" });
-            ViewBag.tyyppi = new SelectList(tyypit , "id", "kuvaus");
-            ViewBag.paikkaID = new SelectList(paikat, "rowid", "selite");
+            ViewBag.tyyppi = new SelectList(getTypesList(true, true) , "id", "kuvaus");
+            ViewBag.paikkaID = new SelectList(getPlacesList(true, true), "rowid", "selite");
+            ViewBag.start = DateTime.Now;
             return View();
         }
 
@@ -121,8 +115,8 @@ namespace Kuluseuranta.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.tyyppi = new SelectList(db.kulutyypit, "id", "kuvaus", kulut.tyyppi);
-            ViewBag.paikkaID = new SelectList(db.paikat, "rowid", "selite", kulut.paikkaID);
+            ViewBag.tyyppi = new SelectList( getTypesList(true, true), "id", "kuvaus", kulut.tyyppi);
+            ViewBag.paikkaID = new SelectList( getPlacesList(true, true) , "rowid", "selite", kulut.paikkaID);
             
             return View(kulut);
         }
@@ -139,15 +133,9 @@ namespace Kuluseuranta.Controllers
             {
                 return HttpNotFound();
             }
-            //Tyypit
-            List<kulutyypit> tyypit = db.kulutyypit.ToList();
-            tyypit.Add(new kulutyypit { id = 0, kuvaus = "Lisää uusi!" });
-            //Paikat
-            List<paikat> paikat = db.paikat.ToList();
-            paikat.Add(new paikat { rowid = 0, selite = "Lisää uusi!" });
 
-            ViewBag.tyyppi = new SelectList(tyypit, "id", "kuvaus", kulut.tyyppi);
-            ViewBag.paikkaID = new SelectList(paikat, "rowid", "selite", kulut.paikkaID);
+            ViewBag.tyyppi = new SelectList(getTypesList(true, true)  , "id", "kuvaus", kulut.tyyppi);
+            ViewBag.paikkaID = new SelectList(getPlacesList(true, true), "rowid", "selite", kulut.paikkaID);
             return View(kulut);
         }
 
@@ -176,8 +164,10 @@ namespace Kuluseuranta.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.tyyppi = new SelectList(db.kulutyypit, "id", "kuvaus", kulut.tyyppi);
-            ViewBag.paikkaID = new SelectList(db.paikat, "rowid", "selite", kulut.paikkaID);
+            //List<paikat> places = (from d in db.paikat select d).OrderByDescending (d => db.kulut.Where(x => x.paikkaID == d.rowid).Count()).ToList();
+
+            ViewBag.tyyppi = new SelectList( getTypesList(true, true), "id", "kuvaus", kulut.tyyppi);
+            ViewBag.paikkaID = new SelectList( getPlacesList(true, true), "rowid", "selite", kulut.paikkaID);
             return View(kulut);
         }
 
@@ -216,7 +206,49 @@ namespace Kuluseuranta.Controllers
             base.Dispose(disposing);
         }
 
+        #region helpers
 
-     
+        private List< kulutyypit > getTypesList(bool orderByCount = true, bool addNewChoise = false)
+        {
+            //Tyypit
+            List<kulutyypit> tyypit = null;
+            using( var db = new kulutEntities())
+            {
+                tyypit = db.kulutyypit.ToList();
+                if (orderByCount)
+                    tyypit = tyypit.OrderByDescending(d => db.kulut.Where(x => x.tyyppi == d.id).Count()).ToList();
+                if ( addNewChoise)
+                    tyypit.Add(new kulutyypit { id = 0, kuvaus = "Lisää uusi!" });
+            }
+            return tyypit;
+        }
+         
+        private List<paikat> getPlacesList(bool orderByCount = true, bool addNewChoise = false)
+        {
+            try
+            {
+                List<paikat> listToReturn = null;
+                using (var db = new kulutEntities())
+                {
+                    listToReturn = (from d in db.paikat select d).ToList();
+                    if ( orderByCount)
+                        listToReturn = (from d in listToReturn select d).OrderByDescending(d => db.kulut.Where(x => x.paikkaID == d.rowid).Count()).ToList();
+                    if (addNewChoise)
+                    {
+                        listToReturn.Add(new paikat { rowid = 0, selite = "Lisää uusi!" });
+                    }
+                    return listToReturn;
+
+                }
+            } catch(Exception e)
+            {
+                return null;
+            }
+        }   
+         
+        #endregion
+
+
+
     }
 }

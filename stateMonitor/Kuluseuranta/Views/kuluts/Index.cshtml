@@ -18,7 +18,7 @@
         <div class="col-md-7">           
             @foreach (var insurer in Model.typeList)
             {
-            <input type="checkbox" name="sList" value="@insurer.Value" checked="@insurer.Selected" /> @insurer.Text
+                <input type="checkbox" name="sList" value="@insurer.Value" checked="@insurer.Selected" /> @insurer.Text
             }
         </div>
         <div class="col-md-1">
