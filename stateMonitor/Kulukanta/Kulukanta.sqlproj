@@ -70,5 +70,7 @@
     <Build Include="dbo\Functions\F_Menot_Per_Viikko.sql" />
     <Build Include="dbo\Functions\F_Kulut_Per_Tyyppi.sql" />
     <Build Include="dbo\Stored Procedures\S_Menot_Per_Viikko.sql" />
+    <Build Include="dbo\Tables\kaupungit.sql" />
+    <Build Include="dbo\Stored Procedures\SP_BackUP_DB.sql" />
   </ItemGroup>
 </Project>

@@ -5,16 +5,28 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="kulutModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="kaupungit">
+          <Key>
+            <PropertyRef Name="row_id" />
+          </Key>
+          <Property Name="row_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="90" />
+          <Property Name="state" Type="nvarchar" MaxLength="500" />
+          <Property Name="country" Type="nvarchar" MaxLength="500" />
+          <Property Name="created_at" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="kulut">
           <Key>
             <PropertyRef Name="rowid" />
           </Key>
           <Property Name="rowid" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="timestamp" Type="datetime" />
+          <Property Name="timestamp" Type="datetime" Nullable="false" />
           <Property Name="tyyppi" Type="int" />
           <Property Name="paikkaID" Type="int" />
           <Property Name="maara" Type="float" />
           <Property Name="selite" Type="nvarchar(max)" />
+          <Property Name="cityID" Type="int" />
+          <Property Name="added_at" Type="datetime" />
         </EntityType>
         <EntityType Name="kulutyypit">
           <Key>
@@ -30,7 +42,20 @@
           <Property Name="rowid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="selite" Type="nvarchar(max)" />
           <Property Name="kaupunki" Type="nvarchar(max)" />
+          <Property Name="cityID" Type="int" />
         </EntityType>
+        <Association Name="FK_kulut_kaupungit">
+          <End Role="kulut" Type="Self.kulut" Multiplicity="1" />
+          <End Role="kulut1" Type="Self.kulut" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="kulut">
+              <PropertyRef Name="rowid" />
+            </Principal>
+            <Dependent Role="kulut1">
+              <PropertyRef Name="rowid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_kulut_kulutyypit">
           <End Role="kulutyypit" Type="Self.kulutyypit" Multiplicity="0..1" />
           <End Role="kulut" Type="Self.kulut" Multiplicity="*" />
@@ -44,14 +69,14 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_kulut_paikat">
-          <End Role="paikat" Type="Self.paikat" Multiplicity="0..1" />
+          <End Role="kaupungit" Type="Self.kaupungit" Multiplicity="0..1" />
           <End Role="kulut" Type="Self.kulut" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="paikat">
-              <PropertyRef Name="rowid" />
+            <Principal Role="kaupungit">
+              <PropertyRef Name="row_id" />
             </Principal>
             <Dependent Role="kulut">
-              <PropertyRef Name="paikkaID" />
+              <PropertyRef Name="cityID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -81,15 +106,20 @@
           <Parameter Name="resMax" Type="int" Mode="In" />
         </Function>
         <EntityContainer Name="kulutModelStoreContainer">
+          <EntitySet Name="kaupungit" EntityType="Self.kaupungit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="kulut" EntityType="Self.kulut" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="kulutyypit" EntityType="Self.kulutyypit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="paikat" EntityType="Self.paikat" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_kulut_kaupungit" Association="Self.FK_kulut_kaupungit">
+            <End Role="kulut" EntitySet="kulut" />
+            <End Role="kulut1" EntitySet="kulut" />
+          </AssociationSet>
           <AssociationSet Name="FK_kulut_kulutyypit" Association="Self.FK_kulut_kulutyypit">
             <End Role="kulutyypit" EntitySet="kulutyypit" />
             <End Role="kulut" EntitySet="kulut" />
           </AssociationSet>
           <AssociationSet Name="FK_kulut_paikat" Association="Self.FK_kulut_paikat">
-            <End Role="paikat" EntitySet="paikat" />
+            <End Role="kaupungit" EntitySet="kaupungit" />
             <End Role="kulut" EntitySet="kulut" />
           </AssociationSet>
         </EntityContainer>
@@ -102,13 +132,18 @@
             <PropertyRef Name="rowid" />
           </Key>
           <Property Name="rowid" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="timestamp" Type="DateTime" Precision="3" />
+          <Property Name="timestamp" Type="DateTime" Precision="3" Nullable="false" />
           <Property Name="tyyppi" Type="Int32" />
           <Property Name="paikkaID" Type="Int32" />
           <Property Name="maara" Type="Double" />
           <Property Name="selite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="kulutyypit" Relationship="Self.FK_kulut_kulutyypit" FromRole="kulut" ToRole="kulutyypit" />
           <NavigationProperty Name="paikat" Relationship="Self.FK_kulut_paikat" FromRole="kulut" ToRole="paikat" />
+          <Property Name="cityID" Type="Int32" />
+          <Property Name="added_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="kaupungit" Relationship="kulutModel.FK_kulut_paikat1" FromRole="kulut" ToRole="kaupungit" />
+          <NavigationProperty Name="kulut1" Relationship="kulutModel.FK_kulut_kaupungit" FromRole="kulut" ToRole="kulut1" />
+          <NavigationProperty Name="kulut2" Relationship="kulutModel.FK_kulut_kaupungit" FromRole="kulut1" ToRole="kulut" />
         </EntityType>
         <EntityType Name="kulutyypit">
           <Key>
@@ -126,6 +161,7 @@
           <Property Name="selite" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="kaupunki" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="kulut" Relationship="Self.FK_kulut_paikat" FromRole="paikat" ToRole="kulut" />
+          <Property Name="cityID" Type="Int32" />
         </EntityType>
         <Association Name="FK_kulut_kulutyypit">
           <End Role="kulutyypit" Type="Self.kulutyypit" Multiplicity="0..1" />
@@ -179,6 +215,15 @@
             <Parameter Name="groupType" Mode="In" Type="Int32" />
             <Parameter Name="resMax" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="kaupungit" EntityType="kulutModel.kaupungit" />
+          <AssociationSet Name="FK_kulut_paikat1" Association="kulutModel.FK_kulut_paikat1">
+            <End Role="kaupungit" EntitySet="kaupungit" />
+            <End Role="kulut" EntitySet="kulut" />
+          </AssociationSet>
+          <AssociationSet Name="FK_kulut_kaupungit" Association="kulutModel.FK_kulut_kaupungit">
+            <End Role="kulut" EntitySet="kulut" />
+            <End Role="kulut1" EntitySet="kulut" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="F_Menot_Per_Viikko_Result">
           <Property Type="Int32" Name="rowid" Nullable="false" />
@@ -191,6 +236,41 @@
           <Property Type="Double" Name="summa" Nullable="true" />
           <Property Type="String" Name="ident" Nullable="true" MaxLength="100" />
         </ComplexType>
+        <EntityType Name="kaupungit">
+          <Key>
+            <PropertyRef Name="row_id" />
+          </Key>
+          <Property Name="row_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="90" FixedLength="false" Unicode="true" />
+          <Property Name="state" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="country" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="kulut" Relationship="kulutModel.FK_kulut_paikat1" FromRole="kaupungit" ToRole="kulut" />
+        </EntityType>
+        <Association Name="FK_kulut_paikat1">
+          <End Type="kulutModel.kaupungit" Role="kaupungit" Multiplicity="0..1" />
+          <End Type="kulutModel.kulut" Role="kulut" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="kaupungit">
+              <PropertyRef Name="row_id" />
+            </Principal>
+            <Dependent Role="kulut">
+              <PropertyRef Name="cityID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_kulut_kaupungit">
+          <End Type="kulutModel.kulut" Role="kulut" Multiplicity="1" />
+          <End Type="kulutModel.kulut" Role="kulut1" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="kulut">
+              <PropertyRef Name="rowid" />
+            </Principal>
+            <Dependent Role="kulut1">
+              <PropertyRef Name="rowid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -200,6 +280,8 @@
           <EntitySetMapping Name="kulut">
             <EntityTypeMapping TypeName="kulutModel.kulut">
               <MappingFragment StoreEntitySet="kulut">
+                <ScalarProperty Name="added_at" ColumnName="added_at" />
+                <ScalarProperty Name="cityID" ColumnName="cityID" />
                 <ScalarProperty Name="rowid" ColumnName="rowid" />
                 <ScalarProperty Name="timestamp" ColumnName="timestamp" />
                 <ScalarProperty Name="tyyppi" ColumnName="tyyppi" />
@@ -220,6 +302,7 @@
           <EntitySetMapping Name="paikat">
             <EntityTypeMapping TypeName="kulutModel.paikat">
               <MappingFragment StoreEntitySet="paikat">
+                <ScalarProperty Name="cityID" ColumnName="cityID" />
                 <ScalarProperty Name="rowid" ColumnName="rowid" />
                 <ScalarProperty Name="selite" ColumnName="selite" />
                 <ScalarProperty Name="kaupunki" ColumnName="kaupunki" />
@@ -245,6 +328,17 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="kaupungit">
+            <EntityTypeMapping TypeName="kulutModel.kaupungit">
+              <MappingFragment StoreEntitySet="kaupungit">
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="row_id" ColumnName="row_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

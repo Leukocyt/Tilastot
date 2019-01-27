@@ -3,6 +3,14 @@
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
+/*
+GROUP TYPES:
+
+0 => WEEK
+1 => TYPE
+2 => PAIKKA
+3 => MONTH
+*/
 CREATE PROCEDURE [dbo].[S_Menot_Per_Viikko]
 	-- Add the parameters for the stored procedure here
 @start datetime, @end datetime, @typeList nvarchar(200), @placeList nvarchar(200), @groupType int = 0, @resMax int = 5
@@ -16,26 +24,30 @@ BEGIN
 		-- Add the column definitions for the TABLE variable here
 		rowid int identity(1,1),
 		weekNumber nvarchar(300),
-		summa float
+		summa float,
+		ident nvarchar(100)
 	)
 	SET DATEFIRST 1 ;  
 	if @groupType = 0 begin
-		insert @retTable (summa, weekNumber)
+		insert @retTable (summa, weekNumber, ident
+		)
 		select 
-			round(sum(maara),2) as summa, datepart(ISO_WEEK, timestamp) as weekNumber from kulut k
+			round(sum(maara),2) as summa, datepart(ISO_WEEK, timestamp) as weeknumber, cast(YEAR(timestamp) as nvarchar(10)) + '.' + cast( datepart(ISO_WEEK, timestamp)  as nvarchar(10)) as Id 
+			
+		from kulut k
 		where timestamp 
 			between @start and @end --and k.paikkaID in (select string from dbo.ufn_CSVToTable(@placeList, ','))				
 			and k.tyyppi in (select string from dbo.ufn_CSVToTable(@typeList, ','))
 			and (@placeList = '' or k.paikkaID in (select string from dbo.ufn_CSVToTable(@placeList, ',')))
 		group by 
-			datepart(ISO_WEEK, timestamp) 
+			datepart(ISO_WEEK, timestamp), YEAR(timestamp) 
 		order by 
-			weekNumber asc
+			YEAR(timestamp) asc, weekNumber asc
 		end
 	--Tyypit
 	else if @groupType = 1 begin
-		insert @retTable (summa, weekNumber)
-		select  t1.summa, t.kuvaus from (
+		insert @retTable (summa, weekNumber, ident)
+		select  t1.summa, t.kuvaus, t1.tyyppi from (
 
 		select 
 			round(sum(maara),2) as summa, tyyppi from kulut k
@@ -80,5 +92,21 @@ BEGIN
 		
 		order by t1.summa desc
 	end
-	select * from @retTable order by weekNumber asc
+
+	else if @groupType = 3 begin
+		
+		insert @retTable (summa, weekNumber)
+		select 
+			round(sum(maara),2) as summa, CAST(YEAR(timestamp) as nvarchar(10)) + '.' + CAST(MONTH(timestamp) as nvarchar(10)) as j  from kulut k
+		where timestamp 
+			between @start and @end --and k.paikkaID in (select string from dbo.ufn_CSVToTable(@placeList, ','))				
+			and (@typeList = '' or k.tyyppi in (select string from dbo.ufn_CSVToTable(@typeList, ',')))
+			and (@placeList = '' or k.paikkaID in (select string from dbo.ufn_CSVToTable(@placeList, ',')))
+		group by 
+			YEAR(timestamp), MONTH(timestamp)
+		order by 
+			YEAR(TIMESTAMP), MONTH(TIMESTAMP) ASC
+	end
+
+	select * from @retTable --order by weekNumber asc
 END

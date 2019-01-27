@@ -13,6 +13,7 @@
             <input type="submit" value="Hae" class="btn btn-default" />
             <p>Tulosten maksimimäärä</p>
             <input type="number" name="resMax" id="resMax" value="@ViewBag.resMax" />
+            <input type="hidden" name="monthGraph" id="monthGraph" value="@Session["monthGraph"].ToString()" />
         </div>
         <div class="col-md-7">
             @foreach (var insurer in Model.typeList)
@@ -27,7 +28,7 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <input id="monthSelection" type="checkbox" name="monthSelection" value="Kaikki?" />Kuukausigraafi?
+        <input id="monthSelection" type="checkbox" checked="@Session["monthGraph"]" name="monthSelection" value="Kaikki?" />Kuukausigraafi?
         <div id="plot_area" class="flotti"></div>
     </div>
     <div class="col-md-6">
@@ -112,7 +113,7 @@
     var dAddInfo = [];
     var d2 = [];
     var d3 = [];
-    var monthSel = false;
+    var monthSel = @(Session["monthGraph"].ToString().ToLower());  //false;
 
     function labelFormatter(label, series) {
 
@@ -148,10 +149,17 @@
             pieDataTypes[i] = d2[i][2];
         }
         //Bar Graph
-        $.plot("#plot_area", [{
-            data: d
-        }], options
-        );
+        if (!monthSel) {
+            $.plot("#plot_area", [{
+                data: d
+            }], options
+            );
+        } else {
+            $.plot("#plot_area", [{
+                data: d3
+            }], options
+            );
+        }
         //Click
         $('#plot_area').bind("plotclick", function(event,pos,obj) {
             var selYear = 0; //d[obj.dataIndex][0];
@@ -194,6 +202,22 @@
         });
 
     });
+
+    function drawBarGraph(monthBar) {
+        if( monthBar) {
+            $.plot("#plot_area", [{
+                data: d3
+            }], options
+            );
+        } else {
+            $.plot("#plot_area", [{
+                data: d
+            }], options
+            );
+        }
+    }
+
+
     $('#allSelect').click(function (event)
     {
         var selected = this.checked;
@@ -206,6 +230,7 @@
     $('#monthSelection').click(function (event) {
         var selected = this.checked;
         monthSel = selected;
+        $('#monthGraph').val(selected);
         // Iterate each checkbox
         if (selected) {
             $.plot("#plot_area", [{

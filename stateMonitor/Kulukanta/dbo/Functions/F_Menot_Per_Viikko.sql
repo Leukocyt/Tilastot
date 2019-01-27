@@ -3,6 +3,14 @@
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
+/*
+GROUP TYPES:
+
+0 => WEEK
+1 => TYPE
+2 => PAIKKA
+3 => MONTH
+*/
 CREATE FUNCTION [dbo].[F_Menot_Per_Viikko]
 (
 	-- Add the parameters for the function here
@@ -58,12 +66,10 @@ BEGIN
 			insert @retTable (weekNumber, summa) select 'Muut', @tmpSum
 
 			set @groupType = 0
-		end
-		
+		end	
 	end
 	--Paikat
-	else if @groupType = 2 begin
-		
+	else if @groupType = 2 begin	
 		insert @retTable (summa, weekNumber)
 		select  t1.summa, p.selite from (
 
@@ -80,6 +86,11 @@ BEGIN
 		
 		order by t1.summa desc
 	end
+
+
+
+
+
 	
 	RETURN 
 END

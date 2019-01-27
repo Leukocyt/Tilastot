@@ -15,13 +15,18 @@ namespace Kuluseuranta.Models
     public partial class kulut
     {
         public long rowid { get; set; }
-        public Nullable<System.DateTime> timestamp { get; set; }
+        public System.DateTime timestamp { get; set; }
         public Nullable<int> tyyppi { get; set; }
         public Nullable<int> paikkaID { get; set; }
         public Nullable<double> maara { get; set; }
         public string selite { get; set; }
+        public Nullable<int> cityID { get; set; }
+        public Nullable<System.DateTime> added_at { get; set; }
     
         public virtual kulutyypit kulutyypit { get; set; }
         public virtual paikat paikat { get; set; }
+        public virtual kaupungit kaupungit { get; set; }
+        public virtual kulut kulut1 { get; set; }
+        public virtual kulut kulut2 { get; set; }
     }
 }

@@ -30,6 +30,7 @@ namespace Kuluseuranta.Models
         public virtual DbSet<kulut> kulut { get; set; }
         public virtual DbSet<kulutyypit> kulutyypit { get; set; }
         public virtual DbSet<paikat> paikat { get; set; }
+        public virtual DbSet<kaupungit> kaupungit { get; set; }
     
         [DbFunction("kulutEntities", "F_Menot_Per_Viikko")]
         public virtual IQueryable<F_Menot_Per_Viikko_Result> F_Menot_Per_Viikko(Nullable<System.DateTime> start, Nullable<System.DateTime> end, string typeList, string placeList, Nullable<int> groupType, Nullable<int> resMax)

@@ -185,6 +185,9 @@
       <DependentUpon>Kulukanta.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\kaupungit.cs">
+      <DependentUpon>Kulukanta.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Kulukanta.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

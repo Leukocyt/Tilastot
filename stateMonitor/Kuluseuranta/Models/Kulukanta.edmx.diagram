@@ -10,6 +10,9 @@
         <EntityTypeShape EntityType="kulutModel.paikat" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
         <AssociationConnector Association="kulutModel.FK_kulut_kulutyypit" ManuallyRouted="false" />
         <AssociationConnector Association="kulutModel.FK_kulut_paikat" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="kulutModel.kaupungit" Width="1.5" PointX="9.25" PointY="6.75" />
+        <AssociationConnector Association="kulutModel.FK_kulut_paikat1" />
+        <AssociationConnector Association="kulutModel.FK_kulut_kaupungit" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

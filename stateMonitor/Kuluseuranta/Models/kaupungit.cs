@@ -12,18 +12,19 @@ namespace Kuluseuranta.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class paikat
+    public partial class kaupungit
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public paikat()
+        public kaupungit()
         {
             this.kulut = new HashSet<kulut>();
         }
     
-        public int rowid { get; set; }
-        public string selite { get; set; }
-        public string kaupunki { get; set; }
-        public Nullable<int> cityID { get; set; }
+        public int row_id { get; set; }
+        public string name { get; set; }
+        public string state { get; set; }
+        public string country { get; set; }
+        public System.DateTime created_at { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<kulut> kulut { get; set; }

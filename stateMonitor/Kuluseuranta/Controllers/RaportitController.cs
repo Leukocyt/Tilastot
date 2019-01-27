@@ -15,7 +15,7 @@ namespace Kuluseuranta.Controllers
         private kulutEntities db = new kulutEntities();
 
         // GET: kuluts
-        public ActionResult Index(DateTime? start, DateTime? end, string[] sList = null, int resMax = 5)
+        public ActionResult Index(DateTime? start, DateTime? end, string[] sList = null, int resMax = 5, bool monthGraph = false)
         {
             RaportitViewModel rVM = new RaportitViewModel();
             DateTime startForQuery, endForQuery;
@@ -71,6 +71,8 @@ namespace Kuluseuranta.Controllers
             var formatForPageSwitches = "yyyy/MM/dd";
             ViewBag.startFormatted = startForQuery.ToString(formatForPageSwitches);
             ViewBag.endFormatted = endForQuery.ToString(formatForPageSwitches);
+            //Month graph choise in session object.
+            Session["monthGraph"] = monthGraph;
             return View(rVM);
         }
 
