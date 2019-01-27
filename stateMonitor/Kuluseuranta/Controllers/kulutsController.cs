@@ -11,7 +11,7 @@ using Kuluseuranta.Models;
 namespace Kuluseuranta.Controllers
 {
     //[Authorize(Roles = @"Raportit")]
-    public class kulutsController : Controller
+    public class kulutsController : baseController
     {
         private kulutEntities db = new kulutEntities();
 

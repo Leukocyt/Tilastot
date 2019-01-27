@@ -6,7 +6,19 @@ using System.Web.Mvc;
 
 namespace Kuluseuranta.Models
 {
-    public class KulutViewModel
+
+    public class baseViewModel
+    {
+        public string baseUrl { get; set; }
+        public HttpRequest request { get; set; }
+
+        public baseViewModel()
+        {
+            baseUrl = HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath;
+            request = request;
+        }
+    }
+    public class KulutViewModel: baseViewModel
     {
         public List<kulut> kulut { get; set; }
 
@@ -28,7 +40,7 @@ namespace Kuluseuranta.Models
         }
     }
 
-    public class flotGraphModel
+    public class flotGraphModel:baseViewModel
     {
         public string graphTitle { get; set; }
         public List<object[]> flotResultList { get; set; }
@@ -42,7 +54,7 @@ namespace Kuluseuranta.Models
         }
     }
 
-    public class RaportitViewModel
+    public class RaportitViewModel:baseViewModel
     {
         public List<flotGraphModel> gList { get; set; }
         public string title { get; set; }
@@ -55,6 +67,7 @@ namespace Kuluseuranta.Models
 
         public RaportitViewModel()
         {
+
             gList = new List<flotGraphModel>();
             title = "";
             start = null;

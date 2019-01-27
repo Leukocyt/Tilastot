@@ -10,7 +10,7 @@ using Kuluseuranta.Models;
 
 namespace Kuluseuranta.Controllers
 {
-    public class RaportitController : Controller
+    public class RaportitController : baseController
     {
         private kulutEntities db = new kulutEntities();
 
