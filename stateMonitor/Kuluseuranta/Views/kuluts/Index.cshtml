@@ -44,13 +44,13 @@
                 foreach (var r in Model.kulut)
                 {
                     <tr>
-                        <td>@r.timestamp </td>
+                        <td>@Html.ActionLink(r.timestamp.ToString() , "Edit", new { id = r.rowid })</td>
                         <td>@r.kulutyypit.kuvaus </td>
                         <td>@r.paikat.selite </td>
                         <td>@r.maara</td>
                         <td>@r.selite</td>
                         <td>
-                            @Html.ActionLink("Muokkaa", "Edit", new {id = r.rowid })
+                            @Html.ActionLink("Kopioi", "Create", new {id = r.rowid })
                         </td>
                     </tr>
                 }

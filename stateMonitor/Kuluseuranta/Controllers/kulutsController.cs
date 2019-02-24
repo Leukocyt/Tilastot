@@ -81,12 +81,18 @@ namespace Kuluseuranta.Controllers
         }
 
         // GET: kuluts/Create
-        public ActionResult Create()
+        public ActionResult Create(long? id)
         {
-            ViewBag.tyyppi = new SelectList(getTypesList(true, true) , "id", "kuvaus");
-            ViewBag.paikkaID = new SelectList(getPlacesList(true, true), "rowid", "selite");
+            kulut kulut = null;
+            if ( id != null)
+            {
+                kulut = db.kulut.Find(id);
+                kulut.rowid = 0;
+            }
+            ViewBag.tyyppi = new SelectList(getTypesList(true, true), "id", "kuvaus",kulut != null ?  kulut.tyyppi : null);
+            ViewBag.paikkaID = new SelectList(getPlacesList(true, true), "rowid", "selite", kulut != null ? kulut.paikkaID: null);
             ViewBag.start = DateTime.Now;
-            return View();
+            return View(kulut);
         }
 
         // POST: kuluts/Create
