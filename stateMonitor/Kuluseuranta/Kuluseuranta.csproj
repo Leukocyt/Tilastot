@@ -336,6 +336,7 @@
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
     <None Include="Properties\PublishProfiles\koklaus.pubxml" />
+    <None Include="Properties\PublishProfiles\ok.pubxml" />
     <None Include="Properties\PublishProfiles\tssiisus.pubxml" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
